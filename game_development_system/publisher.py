@@ -1,10 +1,11 @@
-from games import Game
 from utils.validators import String, Email
-from game_operations import GameRelease, GameSalesManagement
+from operations import PublisherOperations
+from games import Game, ActionGame, StrategyGame
 from datetime import datetime
+from player import Player
 
 
-class Publisher(GameRelease, GameSalesManagement):
+class Publisher(PublisherOperations):
     name = String()
     contact_info = Email()
 
@@ -15,17 +16,13 @@ class Publisher(GameRelease, GameSalesManagement):
     ) -> None:
         self.name = name
         self.contact_info = contact_info
-        self.published_games = []
+        self.games = []
 
-    def release_game(
-            self,
-            game: Game
-    ) -> None:
-        game.release_date = datetime.now().date()
-        self.published_games.append(game)
+    def release_game(self, game: Game, release_date: datetime) -> None:
+        if not game.released:
+            game.release_date = release_date
+            self.games.append(game)
 
-    def manage_sales(
-            self,
-            game: Game
-    ) -> None:
-        print(f'Managing sales for game {game.title}. ')
+    def sell_game(self, game: Game, player: Player) -> None:
+        if game in self.games:
+            player.games.append(game)

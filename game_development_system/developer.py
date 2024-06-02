@@ -1,10 +1,9 @@
-from datetime import datetime
-from games import Game, ActionGame, StrategyGame
 from utils.validators import String, Email
-from game_operations import GameCreation
+from operations import DeveloperOperations
+from games import Game, ActionGame, StrategyGame
 
 
-class Developer(GameCreation):
+class Developer(DeveloperOperations):
     name = String()
     contact_info = Email()
 
@@ -17,15 +16,15 @@ class Developer(GameCreation):
         self.contact_info = contact_info
         self.games = []
 
-    def create_game(
-            self,
-            title: str,
-            genre: str,
-    ) -> Game:
-        if genre.lower() == 'action':
-            game = ActionGame(title, genre)
-        elif genre.lower() == 'strategy':
-            game = StrategyGame(title, genre)
+    def create_game(self, title: str, genre: str) -> Game:
+        if genre == 'Action':
+            game = ActionGame(title)
+        elif genre == 'Strategy':
+            game = StrategyGame(title)
         else:
-            game = Game(title, genre)
+            game = Game(title)
         return game
+
+    def add_game(self, game: Game) -> None:
+        if game not in self.games:
+            self.games.append(game)

@@ -1,34 +1,37 @@
 from developer import Developer
-from game_development_system import GameDevelopmentSystem
 from publisher import Publisher
+from player import Player
+from datetime import datetime
 
 
 def main() -> None:
-    system = GameDevelopmentSystem()
+    bob = Player('Bob', 'bob@mail.com')
 
-    dev1 = Developer('John', 'john@mail.com')
-    pub1 = Publisher('Art Games', 'contact@mail.com')
+    jack = Developer('Jack', 'jack@mail.com')
+    iron_games = Publisher('Iron Games', 'iron@contact.com')
 
-    dev2 = Developer('Bob', 'bob@mail.com')
-    pub2 = Publisher('New Games', 'contact@gmail.com')
+    super_action = jack.create_game('Super Action', 'Action')
+    good_strategy = jack.create_game('Good Strategy', 'Strategy')
 
-    system.add_developer(dev1)
-    system.add_developer(dev2)
+    jack.add_game(super_action)
+    jack.add_game(good_strategy)
 
-    system.add_publisher(pub1)
-    system.add_publisher(pub2)
+    print("Jack's games.")
+    for game in jack.games:
+        print(game)
 
-    system.list_developers()
-    system.list_publishers()
+    iron_games.release_game(super_action, datetime.now())
+    iron_games.release_game(good_strategy, datetime.now())
 
-    game1 = system.dev_create_game('John', 'AC', 'action')
-    game2 = system.dev_create_game('Bob', 'ST', 'strategy')
+    print("\nIron games' games.")
+    for game in iron_games.games:
+        print(game)
 
-    system.pub_release_game('New Games', game1)
-    system.pub_release_game('Art Games', game2)
+    iron_games.sell_game(super_action, bob)
 
-    print(pub1.published_games)
-    print(pub2.published_games)
+    print("\nBob's games.")
+    for game in bob.games:
+        print(game)
 
 
 if __name__ == '__main__':
