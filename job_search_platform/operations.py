@@ -3,19 +3,19 @@ from abc import ABC, abstractmethod
 
 class JobSeekerOperations(ABC):
     @abstractmethod
-    def search_job(self, company, title: str) -> list:
+    def search_job(self, company, title):
         pass
 
     @abstractmethod
-    def apply_to_job(self, company, title: str) -> None:
+    def apply_to_job(self, company, job):
         pass
 
 
 class CompanyOperations(ABC):
     @abstractmethod
-    def add_job(self, job) -> None:
+    def add_job_posting(self, title, description, salary, job_type='Full time'):
         pass
 
     @abstractmethod
-    def remove_job(self, title: str) -> None:
+    def review_applications(self):
         pass

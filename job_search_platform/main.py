@@ -1,27 +1,28 @@
 from company import Company
-from jobs import FullTimeJob, PartTimeJob
 from job_seeker import JobSeeker
 
 
 def main() -> None:
-    job_company = Company('Job Company', 'contact@example.com')
+    bob = JobSeeker('Bob', 'bob@mail.com',
+                    'Python programmer')
+    job_company = Company('Job company', 'contact@mail.com')
 
-    job1 = FullTimeJob('Programming', 4444)
-    job2 = PartTimeJob('Management', 3333)
+    job = job_company.add_job_posting('Python developer',
+                                      'Developing python apps',
+                                      1000.0)
 
-    job_company.add_job(job1)
-    job_company.add_job(job2)
+    print("Job company's jobs.")
+    for job in job_company.jobs:
+        job.get_description()
 
-    job_seeker1 = JobSeeker('Bob', 'Programmer',
-                            'b@mail.com')
-    job_seeker2 = JobSeeker('Tim', 'Project manager',
-                            'a@mail.com')
+    bob.apply_to_job(job_company, job)
 
-    job_seeker1.apply_to_job(job_company, 'Programming')
-    job_seeker2.apply_to_job(job_company, 'Management')
+    print("\nJob company's applications.")
+    for application in job_company.applications:
+        print(application)
 
-    for applications in job_company.applications:
-        print(applications)
+    print()
+    job_company.review_applications()
 
 
 if __name__ == '__main__':

@@ -1,5 +1,6 @@
 from utils.validators import String, Email
-from job_search_operations import CompanyOperations
+from operations import CompanyOperations
+from job_postings import JobPosting, FullTime, PartTime
 
 
 class Company(CompanyOperations):
@@ -9,21 +10,28 @@ class Company(CompanyOperations):
     def __init__(
             self,
             name: str,
-            contact_info: str
+            contact_info: str,
     ) -> None:
         self.name = name
         self.contact_info = contact_info
-        self.jobs = []
         self.applications = []
+        self.jobs = []
 
-    def add_job(self, job) -> None:
+    def add_job_posting(
+            self,
+            title: str,
+            description: str,
+            salary: float,
+            job_type: str = 'Full time'
+    ) -> JobPosting:
+        if job_type.lower() == 'Part time'.lower():
+            job = PartTime(title, description, salary)
+        else:
+            job = FullTime(title, description, salary)
         self.jobs.append(job)
-
-    def remove_job(self, title: str) -> None:
-        for job in self.jobs:
-            if job.title == title:
-                self.jobs.pop(job)
+        return job
 
     def review_applications(self) -> None:
         for application in self.applications:
-            print(f'Reviewing application \'{application}\' ')
+            print(f'Reviewing resume {application}.')
+    

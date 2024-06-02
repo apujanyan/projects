@@ -1,36 +1,30 @@
 from utils.validators import String, Email
-from job_search_operations import JobSeekerOperations
-from company import Company
+from operations import JobSeekerOperations
+from job_postings import JobPosting
 
 
 class JobSeeker(JobSeekerOperations):
     name = String()
-    resume = String()
     contact_info = Email()
+    resume = String()
 
     def __init__(
             self,
             name: str,
-            resume: str,
-            contact_info: str
+            contact_info: str,
+            resume: str
     ) -> None:
         self.name = name
         self.contact_info = contact_info
         self.resume = resume
 
-    def search_job(self, company: Company, title: str) -> list:
-        jobs = []
-
+    def search_job(self, company, title: str) -> list:
+        result = []
         for job in company.jobs:
-            if job.title == title:
-                jobs.append(job)
+            if title.lower() in job.title.lower():
+                result.append(job)
+        return result
 
-        return jobs
-
-    def apply_to_job(self, company: Company, title: str) -> None:
-        for job in company.jobs:
-            if job.title == title:
-                application = f'{self.name} applied to {job.title}. '
-                company.applications.append(application)
-                return
-        print('Job not existing. ')
+    def apply_to_job(self, company, job: JobPosting) -> None:
+        if job in company.jobs:
+            company.applications.append(self.resume)
