@@ -4,7 +4,6 @@ def typed(fn):
         varnames = fn.__code__.co_varnames
         for arg_name, arg_value in zip(varnames, args):
             if arg_name in types:
-                print(arg_name, arg_value)
                 if not isinstance(arg_value, types[arg_name]):
                     raise TypeError(f'Expected {arg_value} to be '
                                     f'{types[arg_name].__name__} type!')
