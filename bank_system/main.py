@@ -5,15 +5,15 @@ def main() -> None:
     bob = Costumer('Bob', 'bob@mail.com')
     jack = Costumer('Jack', 'jack@mail.com')
 
-    account_b = bob.create_account(50, 'Checking')
-    account_j = jack.create_account(100, 'Saving')
+    account_1 = bob.create_account(1, 100.0,
+                                   'checking')
+    account_2 = jack.create_account(2, 300.0,
+                                    'saving')
 
-    print(bob.accounts)
-    print(jack.accounts)
+    bob.transfer_funds(account_1, account_2, 70.0)
 
-    bob.transfer(account_b, account_j, 20)
-    print(account_b.balance)
-    print(account_j.balance)
+    print(account_1.balance)
+    print(account_2.balance)
 
     bob.view_transaction_history()
     jack.view_transaction_history()

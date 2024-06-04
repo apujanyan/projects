@@ -1,20 +1,21 @@
-from __future__ import annotations
-from utils.validators import Number, String
+from base_models import TransactionBase, AccountBase
+from utils.validators import String, Number, CustomValidator
 
 
-class Transaction:
-    transaction_type = String()
+class Transaction(TransactionBase):
+    account = CustomValidator(AccountBase)
     amount = Number()
+    transaction_type = String()
 
     def __init__(
             self,
-            account: Account,
-            transaction_type: str,
-            amount: float
+            account: AccountBase,
+            amount: float,
+            transaction_type: str
     ) -> None:
         self.account = account
-        self.transaction_type = transaction_type
         self.amount = amount
+        self.transaction_type = transaction_type
 
-
-from accounts import Account
+    def get_description(self) -> None:
+        print(f'Transaction for {self.account.account_number}.')

@@ -1,54 +1,42 @@
-from abc import ABC, abstractmethod
-from utils.validators import String, Integer, Number
-from itertools import count
+from base_models import AccountBase
+from utils.validators import Integer, String, Number
 
 
-class Account(ABC):
-    @abstractmethod
-    def get_description(self) -> None:
-        pass
-
-
-class IndividualAccount(Account):
+class JointAccount(AccountBase):
+    account_number = Integer()
     account_type = String()
     balance = Number()
 
-    __number = count()
-
     def __init__(
             self,
+            account_number: int,
             account_type: str,
             balance: float
     ) -> None:
-        if account_type not in('Checking', 'Saving'):
-            raise ValueError
-        self.number = self.__number
+        self.account_number = account_number
         self.account_type = account_type
         self.balance = balance
         self.transactions = []
 
     def get_description(self) -> None:
-        print(f'Individual account {self.number}. ')
+        print(f'Print account {self.account_number}.')
 
 
-class JointAccount(Account):
+class IndividualAccount(AccountBase):
+    account_number = Integer()
     account_type = String()
     balance = Number()
 
-    __number = count()
-
     def __init__(
             self,
-            number: int,
+            account_number: int,
             account_type: str,
             balance: float
     ) -> None:
-        if account_type not in('Checking', 'Saving'):
-            raise ValueError
-        self.number = self.__number
+        self.account_number = account_number
         self.account_type = account_type
         self.balance = balance
         self.transactions = []
 
     def get_description(self) -> None:
-        print(f'Joint account {self.number}. ')
+        print(f'Print account {self.account_number}.')
