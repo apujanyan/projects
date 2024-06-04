@@ -1,43 +1,36 @@
-from abc import ABC, abstractmethod
+from base_models import CourseBase, TeacherBase
 from utils.validators import String, CustomValidator
-from teacher import Teacher
 
 
-class Course(ABC):
-    @abstractmethod
-    def get_description(self) -> None:
-        pass
-
-
-class Math(Course):
+class Math(CourseBase):
     name = String()
-    # teacher = CustomValidator(Teacher)
+    teacher = CustomValidator(TeacherBase)
 
     def __init__(
             self,
             name: str,
-            teacher: Teacher
+            teacher: TeacherBase
     ) -> None:
         self.name = name
         self.teacher = teacher
         self.enrolled_students = []
 
     def get_description(self) -> None:
-        print(f'Math course: {self.name}. ')
+        print(f'Math course, teacher {self.teacher.name}.')
 
 
-class English(Course):
+class English(CourseBase):
     name = String()
-    # teacher = CustomValidator(Teacher)
+    teacher = CustomValidator(TeacherBase)
 
     def __init__(
             self,
             name: str,
-            teacher: Teacher
+            teacher: TeacherBase
     ) -> None:
         self.name = name
         self.teacher = teacher
         self.enrolled_students = []
 
     def get_description(self) -> None:
-        print(f'English course: {self.name}. ')
+        print(f'English course, teacher {self.teacher.name}.')
