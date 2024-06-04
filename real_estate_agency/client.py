@@ -1,9 +1,10 @@
-from __future__ import annotations
+from base_models import ClientBase, PropertyBase
+from agency import Agency
+from typing import List
 from utils.validators import String, Email, typed
-from operations import ClientOperations
 
 
-class Client(ClientOperations):
+class Client(ClientBase):
     name = String()
     contact_info = Email()
 
@@ -16,23 +17,27 @@ class Client(ClientOperations):
         self.contact_info = contact_info
         self.properties = []
 
-    def search_for_property(self, service: RealEstateAgency,
-                            property_: Property) -> Property | None:
-        if property_ in service.properties:
-            return property_
-        else:
-            print('Cannot find property. ')
+    @typed
+    def search_for_property(
+            self,
+            service: Agency,
+            features: str
+    ) -> List[PropertyBase]:
+        result = []
+        for property in service.properties:
+            if features.lower() in property.features.lower():
+                result.append(property)
+        return result
 
-    def purchase_property(self, service: RealEstateAgency,
-                          property_: Property, price: float) -> None:
-        if (
-                property_ in service.properties and
-                property_ not in self.properties and
-                price >= property_.price
-        ):
-            self.properties.append(property_)
+    def purchase_property(
+            self,
+            service: Agency,
+            property: PropertyBase
+    ) -> None:
+        if property not in service.properties:
+            print('Unavailable property.')
             return
-
-
-from agency import RealEstateAgency
-from properties import Property
+        property_index = service.properties.index(property)
+        self.properties.append(property)
+        service.properties.pop(property_index)
+        print('Successfully purchased.')

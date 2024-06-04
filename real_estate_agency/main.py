@@ -1,23 +1,37 @@
-from agency import RealEstateAgency
-from agent import Agent
 from client import Client
 from properties import Residential, Commercial
+from agency import Agency
+from agent import Agent
 
 
 def main() -> None:
-    agency = RealEstateAgency()
+    agency = Agency()
 
     bob = Client('Bob', 'bob@mail.com')
-    smith = Agent('Smith', 'smith@mail.com')
+    jack = Agent('Jack', 'jack@mail.com')
 
-    residential = Residential('Yerevan', 50000, 'Cosy')
-    commercial = Commercial('Moscow', 100000, 'Luxury')
+    residential = Residential('Yerevan', 120000.0,
+                              'Big, comfortable')
+    commercial = Commercial('Moscow', 300000.0,
+                            'Comfortable, Huge')
 
-    bob.search_for_property(agency, residential)
-    smith.add_property(agency, residential)
-    bob.purchase_property(6, residential, 4700000)
-    print(bob.properties)
-    smith.add_property(agency, commercial)
+    jack.add_property(agency, residential)
+    jack.add_property(agency, commercial)
+
+    search = bob.search_for_property(agency, 'Comfort')
+
+    print()
+    for prop in search:
+        prop.get_description()
+
+    print()
+    for prop in agency.properties:
+        prop.get_description()
+
+    print()
+    bob.purchase_property(agency, residential)
+
+    jack.view_client_info(bob)
 
 
 if __name__ == '__main__':

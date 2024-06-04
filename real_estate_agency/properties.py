@@ -1,14 +1,8 @@
-from abc import ABC, abstractmethod
+from base_models import PropertyBase
 from utils.validators import String, Number
 
 
-class Property(ABC):
-    @abstractmethod
-    def get_description(self) -> None:
-        pass
-
-
-class Residential(Property):
+class Residential(PropertyBase):
     address = String()
     price = Number()
     features = String()
@@ -24,10 +18,10 @@ class Residential(Property):
         self.features = features
 
     def get_description(self) -> None:
-        print(f'Residential property : Address {self.address}. ')
+        print(f'Residential property in {self.address}.')
 
 
-class Commercial(Property):
+class Commercial(PropertyBase):
     address = String()
     price = Number()
     features = String()
@@ -43,4 +37,4 @@ class Commercial(Property):
         self.features = features
 
     def get_description(self) -> None:
-        print(f'Commercial property : Address {self.address}. ')
+        print(f'Commercial property in {self.address}.')
