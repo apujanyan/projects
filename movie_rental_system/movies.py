@@ -1,14 +1,8 @@
-from abc import ABC, abstractmethod
+from base_models import MovieBase
 from utils.validators import String, Number
 
 
-class Movie(ABC):
-    @abstractmethod
-    def get_description(self) -> None:
-        pass
-
-
-class Comedy(Movie):
+class Comedy(MovieBase):
     title = String()
     rating = Number()
 
@@ -18,14 +12,14 @@ class Comedy(Movie):
             rating: float
     ) -> None:
         self.title = title
+        self.genre = 'Comedy'
         self.rating = rating
-        self.genre = 'comedy'
 
     def get_description(self) -> None:
-        print(f'Comedy movie: {self.title}')
+        print(f'Comedy movie {self.title}.')
 
 
-class Drama(Movie):
+class Horror(MovieBase):
     title = String()
     rating = Number()
 
@@ -35,8 +29,8 @@ class Drama(Movie):
             rating: float
     ) -> None:
         self.title = title
+        self.genre = 'Horror'
         self.rating = rating
-        self.genre = 'drama'
 
     def get_description(self) -> None:
-        print(f'Comedy movie: {self.title}')
+        print(f'Horror movie {self.title}.')

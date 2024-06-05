@@ -1,22 +1,32 @@
-from costumer import Costumer
-from rental import Rental
-from movies import Comedy, Drama
+from service import RentingService
+from cotumer import Costumer
+from movies import Comedy, Horror
 
 
 def main() -> None:
-    super_drama = Drama('Super Drama', 7.8)
-    comedy_bingo = Comedy('Comedy Bingo', 8.9)
+    renting_service = RentingService()
 
     bob = Costumer('Bob', 'bob@mail.com')
-    tom = Costumer('Tom', 'tom@mail.com')
 
-    bobs_rental = Rental(bob, super_drama, 90)
-    toms_rental = Rental(tom, comedy_bingo, 60)
+    comedy = Comedy('New Comedy', 6)
+    horror = Horror('Horrible Horror', 7.8)
+    another_comedy = Comedy('New Comedy 2', 6.9)
 
+    renting_service.add_movie(comedy)
+    renting_service.add_movie(horror)
 
+    search = bob.search_for_movie(renting_service, 'horror')
+    for movie in search:
+        movie.get_description()
 
+    bob.rent_movie(renting_service, horror, 90)
+    bob.rent_movie(renting_service, another_comedy, 60)
+
+    bob.return_movie(renting_service, comedy)
+    bob.return_movie(renting_service, horror)
+
+    bob.view_rental_history()
 
 
 if __name__ == '__main__':
     main()
-
