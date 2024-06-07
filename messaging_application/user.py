@@ -1,11 +1,10 @@
-from __future__ import annotations
-from utils.validators import String, Email, validate_type
-from operations import UserOperations
-from messages import Message, AudioMessage, VideoMessage
+from base_models import UserBase, MessageBase, ConversationBase
+from utils.validators import String, Email
 from conversation import Conversation
+from messages import AudioMessage, TextMessage
 
 
-class User(UserOperations):
+class User(UserBase):
     name = String()
     contact_info = Email()
 
@@ -18,43 +17,62 @@ class User(UserOperations):
         self.contact_info = contact_info
 
     def create_conversation(self, *users) -> Conversation:
-        conversation = Conversation()
-        for user in users:
-            validate_type(user, type(self))
-        for user in users:
-            conversation.users.append(user)
+        conversation = Conversation(*users, self)
+        print(f'{self.name} successfully created conversation.')
         return conversation
 
-    def participate_in_conversation(self, conversation: Conversation) -> None:
-        if self not in conversation.users:
-            conversation.users.append(self)
+    def participate_in_conversation(
+            self,
+            conversation: ConversationBase
+    ) -> None:
+        if self in conversation.users:
+            print(f'{self.name} already in conversation.')
             return
-        print(f'{self.name} already in conversation.')
+        conversation.users.append(self)
+        print(f'{self.name} successfully added to conversation.')
 
     def send_message(
             self,
-            conversation: Conversation,
+            conversation: ConversationBase,
             content: str,
             message_type='Text'
-    ) -> Message | None:
+    ) -> MessageBase:
         if self not in conversation.users:
             print(f'{self.name} not in conversation.')
             return
-        if message_type == 'Text':
-            message = Message(self, conversation, content)
+        if message_type == 'Audio':
+            message = AudioMessage(content, self, conversation)
             conversation.history.append(message)
-        elif message_type == 'Audio':
-            message = AudioMessage(self, conversation, content)
-            conversation.history.append(message)
-        elif message_type == 'Video':
-            message = VideoMessage(self, conversation, content)
-            conversation.history.append(message)
-        else:
-            print('Invalid message type.')
+            return message
+        message = TextMessage(content, self, conversation)
+        conversation.history.append(message)
+        return message
 
-    def add_user(self, conversation: Conversation, user) -> None:
-        validate_type(user, type(self))
-        if user not in conversation.users:
-            conversation.users.append(user)
+    def receive_message(self, conversation: ConversationBase) -> None:
+        if self not in conversation.users:
+            print(f'{self.name} not in conversation.')
             return
-        print(f'{user.name} already in conversation.')
+        for message in conversation.history:
+            if message.user != self:
+                print(f'{self.name} receiving message {message.content} '
+                      f'from {message.user.name}.')
+                return
+        print('No new messages.')
+
+    def remove_message(
+            self,
+            conversation: ConversationBase,
+            message: MessageBase
+    ) -> None:
+        if self not in conversation.users:
+            print(f'{self.name} not in conversation.')
+            return
+        if message.user != self:
+            print('Unavailable operation.')
+            return
+        if message not in conversation.history:
+            print('Unavailable operation.')
+            return
+        message_index = conversation.history.index(message)
+        conversation.history.pop(message_index)
+        print('Message was removed from conversation.')

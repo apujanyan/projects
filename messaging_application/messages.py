@@ -1,30 +1,40 @@
-from __future__ import annotations
-from utils.validators import String
-from conversation import Conversation
+from base_models import MessageBase, UserBase, ConversationBase
+from utils.validators import String, CustomValidator
 
 
-class Message:
+class AudioMessage(MessageBase):
     content = String()
+    user = CustomValidator(UserBase)
+    conversation = CustomValidator(ConversationBase)
 
     def __init__(
             self,
-            user,
-            conversation: Conversation,
-            content: str
+            content: str,
+            user: UserBase,
+            conversation: ConversationBase
     ) -> None:
+        self.content = content
         self.user = user
         self.conversation = conversation
+
+    def get_description(self) -> None:
+        print(f'Audio message {self.content}, from {self.user.name}.')
+
+
+class TextMessage(MessageBase):
+    content = String()
+    user = CustomValidator(UserBase)
+    conversation = CustomValidator(ConversationBase)
+
+    def __init__(
+            self,
+            content: str,
+            user: UserBase,
+            conversation: ConversationBase
+    ) -> None:
         self.content = content
+        self.user = user
+        self.conversation = conversation
 
     def get_description(self) -> None:
-        print(f'Message by {self.user.name}: {self.content}.')
-
-
-class AudioMessage(Message):
-    def get_description(self) -> None:
-        print(f'Audio message by {self.user.name}: {self.content}.')
-
-
-class VideoMessage(Message):
-    def get_description(self) -> None:
-        print(f'Video message by {self.user.name}: {self.content}.')
+        print(f'Text message {self.content}, from {self.user.name}.')

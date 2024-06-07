@@ -1,19 +1,23 @@
 from user import User
+from conversation import Conversation
 
 
 def main() -> None:
     bob = User('Bob', 'bob@mail.com')
     jack = User('Jack', 'jack@mail.com')
-    tom = User('Tom', 'tom@mail.com')
 
-    conversation_of_bob = bob.create_conversation(jack)
-    bob.add_user(conversation_of_bob, tom)
+    conv_bob = bob.create_conversation(jack)
 
-    jack.send_message(conversation_of_bob, 'This is message by Jack.',
-                      'Audio')
+    message_bob = bob.send_message(conv_bob, 'This is my message.')
+    jack.receive_message(conv_bob)
 
-    conversation_of_bob.history[0].get_description()
-    tom.participate_in_conversation(conversation_of_bob)
+    for message in conv_bob.history:
+        print(message.content)
+
+    bob.remove_message(conv_bob, message_bob)
+
+    for message in conv_bob.history:
+        print(message.content)
 
 
 if __name__ == '__main__':
