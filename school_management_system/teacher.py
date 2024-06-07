@@ -1,6 +1,6 @@
 from base_models import TeacherBase, CourseBase, StudentBase
-from school import School
 from utils.validators import String, Email, typed
+from school import School
 
 
 class Teacher(TeacherBase):
@@ -25,18 +25,24 @@ class Teacher(TeacherBase):
             course: CourseBase
     ) -> None:
         if course in school.courses:
-            print('Already added.')
+            print(f'Course {course.name} is already existing.')
             return
+        print(f'Course {course.name} is added to list.')
         school.courses.append(course)
-        print('Successfully added.')
 
     @typed
     def view_student_progress(
             self,
+            school: School,
             student: StudentBase,
             course: CourseBase
     ) -> None:
-        if course in student.courses:
-            print('Enrolling.')
+        if course not in school.courses:
+            print(f'Unavailable course {course.name}.')
             return
-        print('Not enrolling.')
+        if student not in course.enrolled_students:
+            print(f'Student {student.name} not enrolling in course '
+                  f'{course.name}.')
+            return
+        print(f'Student {student.name} enrolling in course '
+              f'{course.name}.')

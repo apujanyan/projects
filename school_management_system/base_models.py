@@ -7,17 +7,17 @@ class TeacherBase(ABC):
         pass
 
     @abstractmethod
-    def view_student_progress(self, student, course):
+    def view_student_progress(self, school, student, course):
         pass
 
 
 class StudentBase(ABC):
     @abstractmethod
-    def enroll_in_courses(self, school, course):
+    def enroll_in_course(self, school, course):
         pass
 
     @abstractmethod
-    def view_student_progress(self, course):
+    def view_progress(self, school, course):
         pass
 
 

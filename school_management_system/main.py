@@ -1,6 +1,6 @@
 from student import Student
-from teacher import Teacher
 from school import School
+from teacher import Teacher
 from courses import Math, English
 
 
@@ -12,23 +12,20 @@ def main() -> None:
 
     mr_jackson = Teacher('Jackson', 'jackson@mail.com',
                          'Math')
-    mrs_roberts = Teacher('Roberts', 'roberts@mail.com',
-                          'English')
+    mr_smith = Teacher('Smith', 'smith@mail.com',
+                       'English')
 
-    english = English('English', mrs_roberts)
-    math = Math('Math', mr_jackson)
+    math = Math('Math course for beginners', mr_jackson)
+    english = English('Basic English course', mr_smith)
 
     mr_jackson.add_course(school, math)
-    mrs_roberts.add_course(school, english)
+    mr_smith.add_course(school, english)
 
-    for subject in school.courses:
-        subject.get_description()
+    mr_jackson.view_student_progress(school, bob, math)
+    bob.enroll_in_course(school, math)
 
-    bob.enroll_in_courses(school, math)
-    jack.enroll_in_courses(school, english)
-
-    mrs_roberts.view_student_progress(jack, math)
-    mrs_roberts.view_student_progress(jack, english)
+    bob.view_progress(school, english)
+    jack.view_progress(school, math)
 
 
 if __name__ == '__main__':
