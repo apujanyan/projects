@@ -1,10 +1,8 @@
-from utils.validators import String, Email, validate_type
-from gaming_operations import PlayerOperations
-from console import Console
-from games import Game
+from base_models import PlayerBase, GameBase, ConsoleBase
+from utils.validators import String, Email, typed
 
 
-class Player(PlayerOperations):
+class Player(PlayerBase):
     name = String()
     contact_info = Email()
 
@@ -16,43 +14,44 @@ class Player(PlayerOperations):
         self.name = name
         self.contact_info = contact_info
         self.saved_games = []
-        self.completed_games = []
+        self.played_games = []
 
-    def play_game(self, console, game) -> None:
-        validate_type(console, Console)
-        validate_type(game, Game)
-
-        if game in console.installed_games:
-            print(f'{self.name} is playing {game.title} in '
-                  f'{console.console_type}. ')
+    @typed
+    def play_game(
+            self,
+            console: ConsoleBase,
+            game: GameBase
+    ) -> None:
+        if game not in console.installed_games:
+            print(f'Unavailable game to play.')
             return
-        print(f'{game.title} not installed in {console.console_type}. ')
+        print(f'Player {self.name} is playing game {game.title}.')
+        self.played_games.append(game)
+        return
 
-    def save_game_progress(self, console, game) -> None:
-        validate_type(console, Console)
-        validate_type(game, Game)
-
-        if game in console.installed_games:
-            print(f'Saved {game.title} progress. ')
-            self.saved_games.append(game)
+    @typed
+    def save_game_progress(
+            self,
+            console: ConsoleBase,
+            game: GameBase
+    ) -> None:
+        if game not in self.played_games or game not in console.installed_games:
+            print(f'Unavailable game to save progress.')
             return
-        print(f'{game.title} not installed in {console.console_type}. ')
+        print(f'Saved game {game.title} progress.')
+        self.saved_games.append(game)
 
-    def complete_with_player(self, console, game, other) -> None:
-        validate_type(console, Console)
-        validate_type(game, Game)
-        validate_type(other, type(self))
-
-        if game in console.installed_games:
-            if (
-                game not in self.completed_games and
-                game not in other.completed_games
-            ):
-                self.completed_games.append(game)
-                other.completed_games.append(game)
-                print(f'{self.name} completed {game.title} with '
-                      f'{other.name}. ')
-                return
-            print('Already completed. ')
+    @typed
+    def complete_with_other_player(
+            self,
+            console: ConsoleBase,
+            other,
+            game: GameBase
+    ) -> None:
+        if not isinstance(other, type(self)):
+            raise TypeError(f'Expected {other} to be a Person type.')
+        if game not in console.installed_games:
+            print('Unavailable game.')
             return
-        print(f'{game.title} not installed in {console.console_type}. ')
+        print(f'Game {game.title} successfully completed with player'
+              f' {other.name}.')

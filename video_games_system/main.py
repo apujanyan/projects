@@ -1,22 +1,30 @@
-from console import Console
 from player import Player
-from games import *
+from console import Console
+from games import Adventure, Sports
 from datetime import datetime
 
 
 def main() -> None:
-    adventure_game = AdventureGame('Super Adventure', 'adventure',
-                                   datetime.now())
-    sport_game = SportGame('FIFA 2025', 'sport',
-                           datetime.now())
-
     bob = Player('Bob', 'bob@mail.com')
-    jay = Player('Jay', 'jay@mail.com')
+    jack = Player('Jack', 'jack@mail.com')
 
-    xbox = Console('XBox')
-    xbox.install_game(sport_game)
-    bob.play_game(xbox, sport_game)
-    bob.complete_with_player(xbox, sport_game, jay)
+    new_adventure = Adventure('New Adventure', datetime.now())
+    fifa = Sports('FIFA 2025', datetime.now())
+
+    playstation = Console('Playstation')
+
+    playstation.install_game(fifa)
+    playstation.install_game(fifa)
+    playstation.install_game(new_adventure)
+
+    bob.play_game(playstation, fifa)
+    bob.save_game_progress(playstation, new_adventure)
+    bob.save_game_progress(playstation, fifa)
+
+    bob.complete_with_other_player(playstation, jack, new_adventure)
+
+    for game in bob.saved_games:
+        game.get_description()
 
 
 if __name__ == '__main__':
