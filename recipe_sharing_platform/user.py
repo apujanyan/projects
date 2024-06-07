@@ -1,9 +1,10 @@
-from utils.validators import String, Email
-from recipe_sharing_operations import UserOperations
+from base_models import UserBase, RecipeBase
+from platform import RecipeSharingPlatform
+from utils.validators import String, Email, typed
 from rating import Rating
 
 
-class User(UserOperations):
+class User(UserBase):
     name = String()
     contact_info = Email()
 
@@ -14,24 +15,77 @@ class User(UserOperations):
     ) -> None:
         self.name = name
         self.contact_info = contact_info
-        self.favourite_recipes = []
+        self.saved_recipes = []
+        self.shared_recipes = []
 
-    def save_recipe(self, recipe) -> None:
-        if recipe in self.favourite_recipes:
-            print(f'You already save {recipe.title}. ')
+    def search_for_recipe(
+            self,
+            platform: RecipeSharingPlatform,
+            title: str
+    ) -> list:
+        res = []
+        for recipe in platform.recipes:
+            if title.lower() in recipe.title.lower():
+                res.append(recipe)
+        return res
+
+    @typed
+    def save_recipe(
+            self,
+            platform: RecipeSharingPlatform,
+            recipe: RecipeBase
+    ) -> None:
+        if recipe not in platform.recipes:
+            print(f'Unavailable recipe {recipe.title}.')
             return
-        self.favourite_recipes.append(recipe)
+        if recipe in self.saved_recipes:
+            print(f'{recipe.title} was already saved.')
+            return
+        self.saved_recipes.append(recipe)
+        print(f'{recipe.title} is added to {self.name} '
+              f'saved recipes list.')
 
-    def share_recipe(self, recipe, user) -> None:
-        if recipe in self.favourite_recipes:
-            if recipe in user.favourite_recipes:
-                print(f'{user.name} already had {recipe.title}. ')
-                return
-            user.favourite_recipes.append(recipe)
+    @typed
+    def share_recipe(
+            self,
+            platform: RecipeSharingPlatform,
+            other,
+            recipe: RecipeBase
+    ) -> None:
+        if recipe not in platform.recipes:
+            print(f'Unavailable recipe {recipe.title}.')
+            return
+        if recipe in self.saved_recipes:
+            print(f'{recipe.title} was already saved.')
+            return
+        other.shared_recipes.append(recipe)
+        print(f'{recipe.title} is shared to {other.name}.')
 
-    def rate_recipe(self, recipe, rating) -> None:
-        recipe_rating = Rating(recipe, self, rating)
-        recipe.ratings.append(recipe_rating)
+    @typed
+    def rate_recipe(
+            self,
+            platform: RecipeSharingPlatform,
+            recipe: RecipeBase,
+            score: float
+    ) -> None:
+        if recipe not in platform.recipes:
+            print(f'Unavailable recipe {recipe.title}.')
+            return
+        if score > 10:
+            raise ValueError
+        rating = Rating(self, recipe, score)
+        recipe.ratings.append(rating)
+        print(f'{self.name} rated {recipe.title}, score {score}.')
 
-    def comment_recipe(self, recipe, comment) -> None:
+    @typed
+    def comment_on_recipe(
+            self,
+            platform: RecipeSharingPlatform,
+            recipe: RecipeBase,
+            comment_content: str
+    ) -> None:
+        if recipe not in platform.recipes:
+            print(f'Unavailable recipe {recipe.title}.')
+            return
+        comment = f'{self.name} commented on {recipe.title}: {comment_content}.'
         recipe.comments.append(comment)

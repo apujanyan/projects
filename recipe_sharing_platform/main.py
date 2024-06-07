@@ -1,30 +1,31 @@
-from rating import Rating
 from user import User
-from recipes import *
-from recipe_sharing_platform import RecipeSharingPlatform
+from platform import RecipeSharingPlatform
+from receipes import Dessert, Vegetarian
 
 
 def main() -> None:
     platform = RecipeSharingPlatform()
 
     bob = User('Bob', 'bob@mail.com')
-    tom = User('Tom', 'tom@mail.com')
+    jack = User('Jack', 'jack@mail.com')
 
-    platform.users.append(bob)
-    platform.users.append(tom)
+    veg_recipe = Vegetarian('New Recipe', 'Apple, Orange',
+                            'Just cut them, and mix together.')
+    dessert_recipe = Dessert('Super Dessert', 'Bread, Milk',
+                             'Do what you like.')
 
-    cake = Dessert('Cake', 'Sugar and milk', '...')
-    vegi = Vegetarian('Vegi', 'Flowers', '...')
+    platform.add_recipe(veg_recipe)
+    platform.add_recipe(dessert_recipe)
 
-    platform.recipes.append(cake)
-    platform.recipes.append(vegi)
+    search = bob.search_for_recipe(platform, 'rec')
+    for recipe in search:
+        recipe.get_description()
 
-    search = platform.search_recipe('ve')
+    bob.save_recipe(platform, veg_recipe)
+    jack.comment_on_recipe(platform, veg_recipe, 'Salty')
 
-    bob.save_recipe(vegi)
-    tom.save_recipe(cake)
-
-    bob.share_recipe(vegi, tom)
+    for comment in veg_recipe.comments:
+        print(comment)
 
 
 if __name__ == '__main__':
